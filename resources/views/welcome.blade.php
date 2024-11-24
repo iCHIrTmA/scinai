@@ -16,8 +16,7 @@
     </head>
     <body class="h-full grid p-6" style="place-items: center;">
         <div class="text-xs font-sans">
-            <!-- { !! nl2br($poem) !! } -->
-            {{ $poem }}
+            {!! nl2br($poem) !!}
         </div>
     </body>
 </html>
