@@ -24,7 +24,7 @@
 
                     <div class="mt-19 grid grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div class="col-span-full">
-                            <label for="body" class="block text-sm font-medium leading-6 text-gray-900">Body</label>
+                            <!-- <label for="body" class="block text-sm font-medium leading-6 text-gray-900">Body</label> -->
                             <div class="mt-2">
                                 <textarea id="body" name="body" rows="3" class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-500" rows="20" cols="60"></textarea>
                             </div>
@@ -38,6 +38,14 @@
                 <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
                 <button type="submit" class="rounded-mg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Check</button>
             </div>
+
+            @if ($errors->any())
+                <ul class="mt-2">
+                    @foreach ($errors->all() as $error)
+                        <li class="text-sm text-red-500">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </form>
     </body>
 </html>

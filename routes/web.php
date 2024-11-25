@@ -1,7 +1,9 @@
 <?php
 
 use App\AI\Chat;
+use App\Rules\SpamFree;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use OpenAI\Laravel\Facades\OpenAI;
 
 Route::get('/', function () {
@@ -46,29 +48,9 @@ Route::get('/check-spam', function () {
 
 Route::post('/check-spam', function() {
 
-    $attributes = request()->validate([
-        'body' => ['required', 'string', 'min:16', 'max:256']
+    request()->validate([
+        'body' => ['required', 'string', 'min:2', 'max:256', new SpamFree()]
     ]);
 
-    $prompt = <<<EOT
-        Please check if the following comment is spam:
-        {$attributes['body']}
-        Expected Response Example:
-        {"is_spam": true|false}
-        EOT;
-
-    $messages = [
-        ['role' => 'system', 'content' => 'You are a forum moderator designed to output JSON'],
-        ['role' => 'user', 'content' => $prompt]
-    ];
-
-    $response = OpenAI::chat()->create([
-        'model' => 'gpt-3.5-turbo-1106',
-        'messages' => $messages,
-        'response_format' => ['type' => 'json_object']
-    ])->choices[0]->message->content;
-
-    $response = json_decode($response);
-
-    return $response->is_spam ? 'THIS IS SPAM' : 'Not spam. Text made in good faith :)';
+    return "Redirect wherever is valid. Text made in good faith :)";
 });
