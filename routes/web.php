@@ -15,3 +15,25 @@ Route::get('/', function () {
     
     return view('welcome', ['poem' => $poem]);
 });
+
+Route::get('/case-summary', function () {
+    return view('case-summary');
+});
+
+Route::post('/summarize', function () {
+    $attributes = request()->validate([
+        'topic' => ['required', 'string', 'min:16', 'max:256']
+    ]);
+
+    $prompt = "Please make a readable case summary about {$attributes['topic']}
+        with citations of environmental laws violated and rules of environmental procedure applied.
+        First, make a short summary of the facts,
+        then relevant issues and
+        lastly the Supreme Court ruling of the issues";
+
+    $chat = new Chat();
+
+    $response = $chat->send($prompt);
+
+    dd($response);
+});
