@@ -36,6 +36,7 @@ return [
     ],
 
     'openai' => [
-        'secret' => env('OPENAI_API_KEY')
+        'secret' => env('OPENAI_API_KEY'),
+        'assistant_id' => env('ENVI_LAW_PROFESSOR_ID')
     ]
 ];

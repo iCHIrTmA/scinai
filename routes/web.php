@@ -1,6 +1,7 @@
 <?php
 
 use App\AI\Chat;
+use App\AI\EnviLawProfessor;
 use App\Rules\SpamFree;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -58,86 +59,12 @@ Route::post('/check-spam', function() {
 
 Route::get('/environmental-law', function() {
 
-    // Upload files
-    // $files = [];
-    // foreach (Storage::disk('public')->files('envi-law') as $filePath) {
-    //     $files[] = OpenAI::files()->upload([
-    //         'purpose' => 'assistants',
-    //         'file' => fopen(storage_path("app/public/$filePath"), 'rb')
-    //     ]);
-    // }
+    $professor = new EnviLawProfessor();
 
-
-    // Delete uploaded files
-    // $files = OpenAI::files()->list();
-    // $deleteStatus = [];
-    // foreach (collect($files->data)->pluck('id') as $fileId) {
-    //     $deleteStatus[] = OpenAI::files()->delete($fileId);
-    // }
-
-    // dd($deleteStatus, __METHOD__);
-
-    // dd(fopen(storage_path('app/public/envi-law/Complete-List-of-all-Environmental-Laws-and-Policies-in-the-Philippines-GreenDev-Solutions.pdf'), 'rb'));
-
-    // OpenAI::files()->upload()
-
-    // $files = OpenAI::files()->list();
-
-
-    // dd($files, __METHOD__);
-
-    // create vector / training data
-    // $vector = OpenAI::vectorStores()->create([
-    //     'name' => 'Envi Law Training Data',
-    //     'file_ids' => collect($files->data)->pluck('id')
-    // ]);
-
-    $vectorList = OpenAI::vectorStores()->list();
-    $vectorIds = collect($vectorList->data)->pluck('id');
-
-    // dd(collect($vectorIds->data)->pluck('id'), __METHOD__);
-
-    // dd($vectorIds, __METHOD__); 
-
-    $aiContext = 'You are a Justice of the Supreme Court of the Philippines who is also a professor of Environmental Law.
-            You make clear and concise explanations that any person can understand.';
-
-    $assistant = OpenAI::assistants()->create([
-        'model' => 'gpt-4o-mini',
-        'name' => 'Envi Law Professor',
-        'instructions' => $aiContext,
-        'tools' => [
-            ['type' => 'file_search']
-        ],
-        'tool_resources' => [
-            'file_search' => [
-                'vector_store_ids' => [...$vectorIds]
-            ],
-        ]
-    ]);
-
-    $run = OpenAI::threads()->createAndRun([
-        'assistant_id' => $assistant->id,
-        'thread' => [
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => 'When to petition for writ of kalikasan?'
-                ]
-            ]
-        ],
-    ]);
-
-    do {
-        sleep(1);
-
-        $run = OpenAI::threads()->runs()->retrieve(
-            threadId: $run->threadId,
-            runId: $run->id
-        );
-    } while ($run->status !== 'completed');
-
-    $messages = OpenAI::threads()->messages()->list($run->threadId);
+    $messages = $professor->createThread()
+                ->write('Hello')
+                ->write('How to make a petition for writ of kalikasan? What are the requirements?')
+                ->send();
 
     dd($messages, __METHOD__);
 });

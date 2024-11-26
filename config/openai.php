@@ -25,4 +25,8 @@ return [
     */
 
     'request_timeout' => env('OPENAI_REQUEST_TIMEOUT', 30),
+
+    'assistant' => [
+        'envi_law' => env('ENVI_LAW_PROFESSOR_ID')
+    ]
 ];
