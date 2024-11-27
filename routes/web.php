@@ -2,24 +2,27 @@
 
 use App\AI\Chat;
 use App\AI\EnviLawProfessor;
+use App\Livewire\Chat as LivewireChat;
 use App\Rules\SpamFree;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use OpenAI\Laravel\Facades\OpenAI;
 
-Route::get('/', function () {
-    $chat = new Chat();
+Route::get('/', LivewireChat::class);
 
-    $poem = $chat
-        ->systemMessage("You are a Justice of the Supreme Court of the Philippines who is very knowledgeable in the field of environmental law and also skilled in poetry")
-        ->send("Please write a poem on the constitutional right of the Filipino people to a balanced and healthful ecology.");
+// Route::get('/', function () {
+//     $chat = new Chat();
+
+//     $poem = $chat
+//         ->systemMessage("You are a Justice of the Supreme Court of the Philippines who is very knowledgeable in the field of environmental law and also skilled in poetry")
+//         ->send("Please write a poem on the constitutional right of the Filipino people to a balanced and healthful ecology.");
 
 
-    $poem = $chat->reply("Good, can you make it more readable for children");
+//     $poem = $chat->reply("Good, can you make it more readable for children");
     
-    return view('welcome', ['poem' => $poem]);
-});
+//     return view('welcome', ['poem' => $poem]);
+// });
 
 Route::get('/case-summary', function () {
     return view('case-summary');
